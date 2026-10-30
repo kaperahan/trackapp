@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>My Accounts</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#0f7a5a">
+<meta name="mobile-web-app-capable" content="yes">
+<style>
+:root{--bg:#f4f6f3;--card:#fff;--ink:#16221b;--mute:#6b7a70;--line:#e2e8e3;--acc:#0f7a5a;--accsoft:#dff3ea;--red:#c62828;--green:#1b8a4b;--shadow:0 1px 2px rgba(20,40,30,.08)}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1512;--card:#18211c;--ink:#e8f1ec;--mute:#92a399;--line:#27342d;--acc:#3ccf9b;--accsoft:#173a2d;--red:#ff7b72;--green:#6fd99a;--shadow:none}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+header{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5;padding-top:env(safe-area-inset-top)}
+.top{max-width:960px;margin:0 auto;padding:10px 16px 0;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px}
+h1{margin:0;font-size:18px}
+#sync{font-size:12px;font-weight:600;border:1px solid var(--line);border-radius:999px;padding:2px 9px;color:var(--mute);cursor:pointer;background:transparent;display:inline-flex;align-items:center;gap:6px}
+#sync i{width:8px;height:8px;border-radius:50%;background:var(--mute)}
+#sync.ok i{background:var(--green)}#sync.busy i{background:#d99a06}#sync.off i{background:var(--red)}
+.mnav{display:flex;align-items:center;gap:6px}
+.mnav button{width:34px;height:34px;padding:0;font-size:18px}
+.mnav input{width:auto;font-weight:600}
+nav{max-width:960px;margin:6px auto 0;padding:0 8px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{border:0;background:transparent;border-bottom:3px solid transparent;border-radius:0;padding:10px 12px;font-weight:600;color:var(--mute);white-space:nowrap;display:flex;align-items:center;gap:6px}
+nav button.on{color:var(--ink);border-bottom-color:var(--acc)}
+nav .dot{width:9px;height:9px;border-radius:50%}
+main{max-width:960px;margin:0 auto;padding:16px 16px 96px}
+button,input,select{font:inherit;color:inherit}
+button{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 14px;cursor:pointer}
+button.pri{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
+@media(prefers-color-scheme:dark){button.pri{color:#06241a}}
+button.danger{color:var(--red)}
+input,select{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%}
+label{display:block;font-size:12px;color:var(--mute);margin-bottom:3px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.hero{background:var(--acc);color:#fff;border-radius:16px;padding:18px 20px;margin-bottom:14px}
+@media(prefers-color-scheme:dark){.hero{color:#06241a}}
+.hero .k{font-size:12px;text-transform:uppercase;letter-spacing:.6px;opacity:.85;font-weight:600}
+.hero .v{font-size:32px;font-weight:800;font-variant-numeric:tabular-nums}
+.hero .sub{display:flex;gap:22px;margin-top:8px;flex-wrap:wrap;font-size:13px}
+.hero .sub b{display:block;font-size:16px;font-variant-numeric:tabular-nums}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-bottom:16px}
+.acard{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--c,var(--acc));border-radius:12px;padding:12px 14px;cursor:pointer;box-shadow:var(--shadow)}
+.acard:hover{border-color:var(--c,var(--acc))}
+.acard .nm{font-weight:700;display:flex;justify-content:space-between;gap:8px}
+.acard .ty{font-size:11px;color:var(--mute);font-weight:600;text-transform:uppercase}
+.acard .bal{font-size:22px;font-weight:800;margin:4px 0;font-variant-numeric:tabular-nums}
+.acard .mm{font-size:12px;color:var(--mute);display:flex;justify-content:space-between;font-variant-numeric:tabular-nums}
+.addcard{border:2px dashed var(--line);background:transparent;color:var(--mute);display:flex;align-items:center;justify-content:center;min-height:98px;font-weight:600;border-left:2px dashed var(--line)}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:16px;overflow:hidden;box-shadow:var(--shadow)}
+.panel>h2{margin:0;padding:11px 16px;border-bottom:1px solid var(--line);font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--mute);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{padding:9px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.4px}
+td.n,th.n{text-align:right}
+td.wrap{white-space:normal;min-width:140px}
+tr:last-child td{border-bottom:0}
+tr.click{cursor:pointer}tr.click:hover{background:var(--accsoft)}
+.neg{color:var(--red)}.pos{color:var(--green)}
+.empty{padding:28px 16px;text-align:center;color:var(--mute)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.bars{padding:12px 16px;display:grid;gap:8px}
+.bar{display:grid;grid-template-columns:130px 1fr 100px;gap:10px;align-items:center;font-size:13px}
+.bar .t{height:9px;background:var(--accsoft);border-radius:5px;overflow:hidden}.bar .t i{display:block;height:100%;background:var(--acc)}
+.bar span:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.ahead{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;margin-bottom:14px}
+.ahead h2{margin:0;font-size:22px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.stat .k{font-size:11px;color:var(--mute);text-transform:uppercase;font-weight:600;letter-spacing:.4px}
+.stat .v{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.fab{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));width:58px;height:58px;border-radius:50%;font-size:30px;line-height:1;padding:0;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+dialog{border:1px solid var(--line);border-radius:16px;padding:0;background:var(--card);color:var(--ink);width:min(440px,94vw);max-height:92vh}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+dialog form{padding:18px;display:grid;gap:12px}
+dialog h3{margin:0}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg label{margin:0;padding:9px;text-align:center;cursor:pointer;font-size:13px;text-transform:none;letter-spacing:0;color:var(--ink);font-weight:600}
+.seg input{display:none}
+.seg label:has(input:checked){background:var(--acc);color:#fff}
+@media(prefers-color-scheme:dark){.seg label:has(input:checked){color:#06241a}}
+.acts{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}.acts .sp{margin-right:auto}
+.colors{display:flex;gap:8px;flex-wrap:wrap}
+.colors label{margin:0;width:28px;height:28px;border-radius:50%;cursor:pointer;border:3px solid transparent}
+.colors input{display:none}
+.colors label:has(input:checked){border-color:var(--ink)}
+.hint{color:var(--mute);font-size:13px;padding:0 16px 14px}
+.pad{padding:16px;display:grid;gap:10px;max-width:420px}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#222;color:#fff;padding:8px 14px;border-radius:8px;opacity:0;transition:.25s;pointer-events:none;z-index:20;font-size:14px;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
+@media(max-width:520px){.bar{grid-template-columns:90px 1fr 84px}}
+@media print{header,.fab,button{display:none!important}}
+</style>
+<script src="firebase-config.js"></script>
+</head>
+<body>
+<header>
+  <div class="top"><div class="brand"><h1>My Accounts</h1><button id="sync" title="Sync status"><i></i><span>Local only</span></button></div>
+    <div class="mnav"><button id="prev" title="Previous month">‹</button><input type="month" id="mon"><button id="next" title="Next month">›</button></div></div>
+  <nav id="tabs"></nav>
+</header>
+<main id="view"></main>
+<button class="fab pri" id="fab" title="Add transaction">+</button>
+<dialog id="dlg"></dialog>
+<div class="toast" id="toast"></div>
+<datalist id="dl-cats"></datalist>
+
+<script>
+/* =====================================================================
+   My Accounts: local-first bank accounts tracker.
+   - Works fully offline. Data lives in this device until you sign in.
+   - After signing in, every record is stored in your own Firebase
+     Firestore database and synced between all your devices.
+   ===================================================================== */
+const LKEY='bank-tracker-v2', OLDKEY='bank-tracker-v1', PKEY='bank-tracker-prefs';
+const FB_VERSION='10.14.1';
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const COLORS=['#0f7a5a','#2563eb','#d97706','#9333ea','#dc2626','#0891b2','#be185d','#65a30d'];
+const TYPES=['Bank','E-wallet','Cash','Credit card','Savings','Other'];
+const SUGGEST=['CASH','GCASH','MAYA','MARIBANK','BDO','BPI','GOTYME'];
+const DEFCATS=['Food','Groceries','Transport','Bills','Shopping','Health','Pets','Kids','Savings','Other'];
+
+/* ---------- small helpers ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function ym(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const cents=n=>Math.round((+n||0)*100);
+const mlabel=k=>{const[y,m]=k.split('-').map(Number);return MONTHS[m-1]+' '+y};
+function shift(k,d){let[y,m]=k.split('-').map(Number);m+=d;while(m<1){m+=12;y--}while(m>12){m-=12;y++}return y+'-'+String(m).padStart(2,'0')}
+const mOf=d=>d.slice(0,7);
+const dfmt=d=>{const[y,m,da]=d.split('-').map(Number);return MONTHS[m-1].slice(0,3)+' '+da};
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),2600)}
+function dl(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+
+/* ---------- data model ----------
+   account: {id,name,type,color,start,since,created}
+   tx:      {id,kind:'expense'|'income'|'transfer',date,amount,acct,to,cat,note,created}
+   Every record has its own id, so each one syncs on its own and two devices
+   only conflict if they edit the very same record (newest edit wins). */
+const blank=()=>({accounts:[],tx:[],currency:'₱'});
+function normalize(j){
+  const t0=Date.now();
+  return{
+    accounts:(j.accounts||[]).map((a,i)=>({id:String(a.id),name:String(a.name||'Account'),type:a.type||'Bank',color:a.color||COLORS[0],start:+a.start||0,since:a.since||ym(new Date()),created:a.created||t0+i})),
+    tx:(j.tx||[]).map((t,i)=>({id:String(t.id),kind:t.kind,date:t.date,amount:+t.amount||0,acct:String(t.acct),to:t.to==null?null:String(t.to),cat:t.cat||'',note:t.note||'',created:t.created||t0+i})),
+    currency:j.currency||'₱'};
+}
+function loadLocal(){
+  for(const k of [LKEY,OLDKEY]){try{const r=localStorage.getItem(k);if(r){const j=JSON.parse(r);if(j&&j.accounts)return normalize(j)}}catch(e){}}
+  return blank();
+}
+function loadPrefs(){try{return JSON.parse(localStorage.getItem(PKEY))||{}}catch(e){return{}}}
+function savePrefs(){try{localStorage.setItem(PKEY,JSON.stringify(P))}catch(e){}}
+function saveLocal(){try{localStorage.setItem(LKEY,JSON.stringify(L))}catch(e){toast('Could not save: browser storage is blocked')}}
+
+const L=loadLocal();            // data stored on this device only
+let C=blank();                  // mirror of the cloud database (filled by listeners)
+const P=loadPrefs();            // {cur, lastAcct, cloud}
+let S=P.cloud?C:L;              // the store the app is showing right now
+let cur=P.cur||ym(new Date()), tab='overview';
+
+/* ---------- cloud state ---------- */
+let FB=null, fbApp=null, auth=null, db=null, user=null, unsubs=[];
+let cloudStatus='off';          // off | loading-sdk | no-sdk | signed-out | connecting | live
+const loaded={accounts:false,tx:false}, pend={accounts:false,tx:false,settings:false};
+const cloudConfigured=()=>{const c=window.FIREBASE_CONFIG;return !!(c&&c.apiKey&&c.projectId&&!/PASTE/.test(c.apiKey+c.projectId))};
+const inCloud=()=>S===C;
+
+function upsert(arr,rec){const i=arr.findIndex(x=>x.id===rec.id);if(i<0)arr.push(rec);else arr[i]=rec}
+const colRef=n=>FB.collection(db,'users',user.uid,n);
+const docRef=(n,id)=>FB.doc(colRef(n),id);
+function cloudErr(e){console.error(e);toast('Sync problem: '+(e&&e.code?e.code:e&&e.message||e))}
+
+/* single place where data changes: updates the screen's copy right away,
+   then writes to the device (local mode) or to Firestore (cloud mode, which
+   also keeps its own offline queue and uploads when the internet returns) */
+function putAccount(a){upsert(S.accounts,a);if(inCloud())FB.setDoc(docRef('accounts',a.id),a).catch(cloudErr);else saveLocal()}
+function putTx(t){upsert(S.tx,t);if(inCloud())FB.setDoc(docRef('tx',t.id),t).catch(cloudErr);else saveLocal()}
+function delTx(id){S.tx=S.tx.filter(x=>x.id!==id);if(inCloud())FB.deleteDoc(docRef('tx',id)).catch(cloudErr);else saveLocal()}
+function delAccount(id){
+  const gone=S.tx.filter(t=>t.acct===id||t.to===id).map(t=>t.id);
+  S.tx=S.tx.filter(t=>!gone.includes(t.id));S.accounts=S.accounts.filter(a=>a.id!==id);
+  if(inCloud()){const ops=[['accounts',id],...gone.map(g=>['tx',g])];batchRun(ops.map(([n,i])=>b=>b.delete(docRef(n,i))))}else saveLocal();
+}
+function setCurrency(c){S.currency=c;if(inCloud())FB.setDoc(FB.doc(db,'users',user.uid,'meta','settings'),{currency:c},{merge:true}).catch(cloudErr);else saveLocal()}
+/* many writes at once, in groups of 400 (Firestore allows 500 per batch) */
+function batchRun(fns){
+  for(let i=0;i<fns.length;i+=400){const b=FB.writeBatch(db);fns.slice(i,i+400).forEach(f=>f(b));b.commit().catch(cloudErr)}
+}
+
+/* ---------- loading the Firebase SDK (cached by the service worker for offline use) ---------- */
+async function loadFB(){
+  if(window.FB)return window.FB;
+  const b=`https://www.gstatic.com/firebasejs/${FB_VERSION}/`;
+  const [a,au,fs]=await Promise.all([import(b+'firebase-app.js'),import(b+'firebase-auth.js'),import(b+'firebase-firestore.js')]);
+  return window.FB={...a,...au,...fs};
+}
+async function initCloud(){
+  if(!cloudConfigured()){cloudStatus='off';S=L;P.cloud=false;savePrefs();render();return}
+  cloudStatus='loading-sdk';renderSync();
+  try{FB=await loadFB()}catch(e){console.error(e);cloudStatus='no-sdk';render();return}
+  try{
+    fbApp=FB.initializeApp(window.FIREBASE_CONFIG);
+    auth=FB.getAuth(fbApp);
+    db=FB.initializeFirestore(fbApp,{localCache:FB.persistentLocalCache({tabManager:FB.persistentMultipleTabManager()})});
+  }catch(e){console.error(e);cloudStatus='no-sdk';render();return}
+  FB.onAuthStateChanged(auth,u=>{
+    user=u;stopListeners();
+    if(u){P.cloud=true;S=C;C.accounts=[];C.tx=[];loaded.accounts=loaded.tx=false;cloudStatus='connecting';startListeners()}
+    else{P.cloud=false;S=L;cloudStatus='signed-out'}
+    savePrefs();render();
+  });
+}
+function startListeners(){
+  const snap=(name)=>FB.onSnapshot(colRef(name),s=>{
+    C[name]=s.docs.map(d=>d.data());loaded[name]=true;pend[name]=s.metadata.hasPendingWrites;
+    if(loaded.accounts&&loaded.tx)cloudStatus='live';softRender()},cloudErr);
+  unsubs=[snap('accounts'),snap('tx'),
+    FB.onSnapshot(FB.doc(db,'users',user.uid,'meta','settings'),s=>{if(s.exists()&&s.data().currency)C.currency=s.data().currency;pend.settings=s.metadata.hasPendingWrites;softRender()},cloudErr)];
+}
+function stopListeners(){unsubs.forEach(u=>{try{u()}catch(e){}});unsubs=[];pend.accounts=pend.tx=pend.settings=false}
+/* don't wipe a form the user is typing in */
+function softRender(){const a=document.activeElement;if(tab==='settings'&&a&&$('#view').contains(a)){renderSync();return}render()}
+
+function renderSync(){
+  const b=$('#sync'),t=b.querySelector('span');let cls='',txt='Local only';
+  if(S===C||P.cloud){
+    if(cloudStatus==='no-sdk'){cls='off';txt='Sync unavailable'}
+    else if(!navigator.onLine){cls='off';txt='Offline · saved on device'}
+    else if(cloudStatus!=='live'){cls='busy';txt='Connecting…'}
+    else if(pend.accounts||pend.tx||pend.settings){cls='busy';txt='Syncing…'}
+    else{cls='ok';txt='Synced'}
+  }
+  b.className=cls;t.textContent=txt;
+}
+window.addEventListener('online',renderSync);window.addEventListener('offline',renderSync);
+$('#sync').onclick=()=>{tab='settings';render()};
+
+/* ---------- calculations ---------- */
+const acct=id=>S.accounts.find(a=>a.id===id);
+const accountsSorted=()=>[...S.accounts].sort((a,b)=>(a.created||0)-(b.created||0));
+const visible=month=>accountsSorted().filter(a=>a.since<=month);
+const sorted=list=>[...list].sort((a,b)=>a.date.localeCompare(b.date)||(a.created||0)-(b.created||0));
+const cats=()=>[...new Set([...DEFCATS,...S.tx.map(t=>t.cat).filter(Boolean)])];
+const money=c=>(c<0?'-':'')+S.currency+(Math.abs(c)/100).toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2});
+/* effect of a transaction on one account, in cents (+ in, - out) */
+function eff(t,id){
+  const a=cents(t.amount);
+  if(t.kind==='income')return t.acct===id?a:0;
+  if(t.kind==='expense')return t.acct===id?-a:0;
+  if(t.kind==='transfer')return t.acct===id?-a:(t.to===id?a:0);
+  return 0;
+}
+/* an account's numbers for one month; every month opens with the previous closing */
+function stats(a,month){
+  let opening=cents(a.start),inn=0,out=0;
+  for(const t of S.tx){
+    const e=eff(t,a.id);if(!e)continue;
+    const m=mOf(t.date);
+    if(m<month)opening+=e;else if(m===month){e>0?inn+=e:out+=-e}
+  }
+  return{opening,inn,out,closing:opening+inn-out};
+}
+
+/* ---------- navigation ---------- */
+$('#prev').onclick=()=>{cur=shift(cur,-1);P.cur=cur;savePrefs();render()};
+$('#next').onclick=()=>{cur=shift(cur,1);P.cur=cur;savePrefs();render()};
+$('#mon').onchange=e=>{if(e.target.value){cur=e.target.value;P.cur=cur;savePrefs();render()}};
+function renderTabs(){
+  let h=`<button data-t="overview" class="${tab==='overview'?'on':''}">Overview</button>`;
+  h+=accountsSorted().map(a=>`<button data-t="a${a.id}" class="${tab==='a'+a.id?'on':''}"><span class="dot" style="background:${a.color}"></span>${esc(a.name)}</button>`).join('');
+  h+=`<button data-t="settings" class="${tab==='settings'?'on':''}">Settings</button>`;
+  $('#tabs').innerHTML=h;
+  $('#tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render();window.scrollTo(0,0)});
+}
+function waiting(){return inCloud()&&(cloudStatus==='no-sdk'||!(loaded.accounts&&loaded.tx))}
+function render(){
+  if(tab[0]==='a'&&tab!=='settings'&&!waiting()&&!acct(tab.slice(1)))tab='overview';
+  $('#mon').value=cur;
+  $('#dl-cats').innerHTML=cats().map(c=>`<option value="${esc(c)}">`).join('');
+  renderTabs();renderSync();
+  $('#fab').style.display=(tab==='settings'||waiting())?'none':'block';
+  const v=$('#view');
+  if(tab==='settings')vSettings(v);
+  else if(waiting())v.innerHTML=cloudStatus==='no-sdk'
+    ?`<div class="panel"><div class="empty"><b style="color:var(--ink)">Can't load the sync library</b><br>Connect to the internet once so the app can download and keep it. Your data is safe in the cloud.</div></div>`
+    :`<div class="panel"><div class="empty">Loading your data…</div></div>`;
+  else if(tab==='overview')vOverview(v);else vAccount(v,acct(tab.slice(1)));
+}
+$('#fab').onclick=()=>{
+  if(!S.accounts.length){editAccount(null);return}
+  editTx(null,tab[0]==='a'&&tab!=='settings'?tab.slice(1):null);
+};
+
+/* ---------- overview ---------- */
+function vOverview(v){
+  const accts=visible(cur);
+  if(!S.accounts.length){
+    v.innerHTML=`<div class="panel"><div class="empty"><b style="font-size:17px;color:var(--ink)">Welcome</b><br>Add your first account to start tracking.<div class="chips">`+
+      SUGGEST.map(n=>`<button data-n="${n}">${n}</button>`).join('')+`<button class="pri" id="new">Other…</button></div></div></div>`;
+    v.querySelectorAll('[data-n]').forEach(b=>b.onclick=()=>editAccount(null,b.dataset.n));
+    $('#new').onclick=()=>editAccount(null);return;
+  }
+  let open=0,close=0;accts.forEach(a=>{const s=stats(a,cur);open+=s.opening;close+=s.closing});
+  const ids=new Set(accts.map(a=>a.id));
+  const mt=S.tx.filter(t=>mOf(t.date)===cur&&ids.has(t.acct));
+  const inc=mt.filter(t=>t.kind==='income').reduce((s,t)=>s+cents(t.amount),0);
+  const exp=mt.filter(t=>t.kind==='expense').reduce((s,t)=>s+cents(t.amount),0);
+  let h=`<div class="hero"><div class="k">Total balance · end of ${mlabel(cur)}</div><div class="v">${money(close)}</div>
+    <div class="sub"><span>Opening<b>${money(open)}</b></span><span>Income<b>+${money(inc)}</b></span><span>Expenses<b>-${money(exp)}</b></span></div></div>`;
+  h+=`<div class="grid">`+accts.map(a=>{const s=stats(a,cur);return`<div class="acard" data-id="${esc(a.id)}" style="--c:${a.color}">
+    <div class="nm"><span>${esc(a.name)}</span><span class="ty">${esc(a.type)}</span></div>
+    <div class="bal ${s.closing<0?'neg':''}">${money(s.closing)}</div>
+    <div class="mm"><span>In ${money(s.inn)}</span><span>Out ${money(s.out)}</span></div></div>`}).join('')+
+    `<div class="acard addcard" id="addacc">+ Add account</div></div>`;
+  const cat={};mt.filter(t=>t.kind==='expense').forEach(t=>{const k=t.cat||'Uncategorized';cat[k]=(cat[k]||0)+cents(t.amount)});
+  const rows=Object.entries(cat).sort((a,b)=>b[1]-a[1]),mx=rows.length?rows[0][1]:1;
+  h+=`<div class="panel"><h2>Spending by category</h2>`+(rows.length?`<div class="bars">`+rows.map(([k,c])=>`<div class="bar"><span>${esc(k)}</span><span class="t"><i style="width:${Math.max(3,c/mx*100)}%"></i></span><span>${money(c)}</span></div>`).join('')+`</div>`:`<div class="empty">No expenses in ${mlabel(cur)}.</div>`)+`</div>`;
+  const rec=sorted(mt).reverse().slice(0,12);
+  h+=`<div class="panel"><h2>Activity in ${mlabel(cur)}</h2>`+(rec.length?`<div class="scroll"><table><tr><th>Date</th><th>Account</th><th>Details</th><th class="n">Amount</th></tr>`+rec.map(t=>txRow(t,null)).join('')+`</table></div><div class="hint" style="padding-top:10px">Tap a row to edit or delete it.</div>`:`<div class="empty">Nothing yet. Tap + to add a transaction.</div>`)+`</div>`;
+  v.innerHTML=h;
+  v.querySelectorAll('.acard[data-id]').forEach(c=>c.onclick=()=>{tab='a'+c.dataset.id;render();window.scrollTo(0,0)});
+  $('#addacc').onclick=()=>editAccount(null);
+  v.querySelectorAll('tr.click').forEach(r=>r.onclick=()=>editTx(r.dataset.id));
+}
+function desc(t,view){
+  if(t.kind==='transfer'){
+    const to=acct(t.to),fr=acct(t.acct),n=t.note?` · ${esc(t.note)}`:'';
+    if(view===null)return`Transfer: ${esc(fr?fr.name:'?')} → ${esc(to?to.name:'?')}${n}`;
+    return t.acct===view?`Transfer to ${esc(to?to.name:'?')}${n}`:`Transfer from ${esc(fr?fr.name:'?')}${n}`;
+  }
+  return [t.cat,t.note].filter(Boolean).map(esc).join(' · ')||'—';
+}
+function txRow(t,view,bal){
+  const e=view===null?(t.kind==='income'?cents(t.amount):t.kind==='expense'?-cents(t.amount):0):eff(t,view);
+  const a=acct(t.acct);
+  const amt=view===null&&t.kind==='transfer'?`<span>${money(cents(t.amount))}</span>`:`<span class="${e<0?'neg':'pos'}">${e>0?'+':''}${money(e)}</span>`;
+  return`<tr class="click" data-id="${esc(t.id)}"><td>${dfmt(t.date)}</td>${view===null?`<td>${esc(a?a.name:'?')}</td>`:''}<td class="wrap">${desc(t,view)}</td><td class="n">${amt}</td>${bal!==undefined?`<td class="n ${bal<0?'neg':''}">${money(bal)}</td>`:''}</tr>`;
+}
+
+/* ---------- account tab ---------- */
+function vAccount(v,a){
+  const s=stats(a,cur);
+  const list=sorted(S.tx.filter(t=>mOf(t.date)===cur&&eff(t,a.id)!==0));
+  let run=s.opening;const withBal=list.map(t=>{run+=eff(t,a.id);return{t,bal:run}}).reverse();
+  let h=`<div class="ahead"><div><div style="font-size:12px;color:var(--mute);font-weight:600;text-transform:uppercase"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${a.color};margin-right:6px"></span>${esc(a.type)}</div><h2>${esc(a.name)}</h2></div>
+    <div class="btns"><button id="ea">Edit account</button></div></div>
+  <div class="stats">
+    <div class="stat"><div class="k">Balance · end of month</div><div class="v ${s.closing<0?'neg':''}">${money(s.closing)}</div></div>
+    <div class="stat"><div class="k">Opening</div><div class="v">${money(s.opening)}</div></div>
+    <div class="stat"><div class="k">Money in</div><div class="v pos">+${money(s.inn)}</div></div>
+    <div class="stat"><div class="k">Money out</div><div class="v neg">-${money(s.out)}</div></div></div>
+  <div class="panel"><h2>${mlabel(cur)} transactions <span class="btns"><button data-k="expense">− Expense</button><button data-k="income">+ Income</button><button data-k="transfer">⇄ Transfer</button></span></h2>`;
+  h+=withBal.length?`<div class="scroll"><table><tr><th>Date</th><th>Details</th><th class="n">Amount</th><th class="n">Balance</th></tr>`+withBal.map(x=>txRow(x.t,a.id,x.bal)).join('')+
+    `<tr><td colspan="3" style="color:var(--mute)">Opening balance</td><td class="n" style="color:var(--mute)">${money(s.opening)}</td></tr></table></div>`:
+    `<div class="empty">No transactions in ${mlabel(cur)}.<br>Opening balance: ${money(s.opening)}</div>`;
+  v.innerHTML=h+`</div>`;
+  $('#ea').onclick=()=>editAccount(a.id);
+  v.querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>editTx(null,a.id,b.dataset.k));
+  v.querySelectorAll('tr.click').forEach(r=>r.onclick=()=>editTx(r.dataset.id));
+}
+
+/* ---------- settings ---------- */
+function friendly(e){
+  const c=e&&e.code||'';
+  if(/invalid-credential|wrong-password|user-not-found|invalid-login/.test(c))return'Wrong email or password.';
+  if(/email-already-in-use/.test(c))return'That email already has an account. Use Sign in.';
+  if(/weak-password/.test(c))return'Password must be at least 6 characters.';
+  if(/invalid-email/.test(c))return'That email address is not valid.';
+  if(/network/.test(c))return'No internet connection. Signing in needs internet.';
+  if(/operation-not-allowed|configuration-not-found/.test(c))return'Email/Password sign-in is not switched on in your Firebase project (see README, step 1).';
+  return'Sign-in failed: '+(c||e.message||e);
+}
+function cloudPanel(){
+  if(!cloudConfigured())return`<div class="panel"><h2>Cloud sync</h2><div class="hint" style="padding-top:12px">Not set up. The app works on this device only. To sync several devices, create a free Firebase project and paste its settings into <b>firebase-config.js</b> (README, steps 1 and 2).</div></div>`;
+  if(cloudStatus==='no-sdk')return`<div class="panel"><h2>Cloud sync</h2><div class="hint" style="padding-top:12px">The sync library could not be loaded. Connect to the internet once and reload.</div></div>`;
+  if(!auth)return`<div class="panel"><h2>Cloud sync</h2><div class="hint" style="padding-top:12px">Loading…</div></div>`;
+  if(!user)return`<div class="panel"><h2>Cloud sync</h2><div class="pad">
+    <div class="hint" style="padding:0">Sign in to keep this data in your own database and share it with your other devices. Your data now on this device stays here until you upload it.</div>
+    <div><label for="em">Email</label><input id="em" type="email" autocomplete="username"></div>
+    <div><label for="pw">Password</label><input id="pw" type="password" autocomplete="current-password"></div>
+    <div class="btns"><button class="pri" id="si">Sign in</button><button id="su">Create account</button></div></div></div>`;
+  const hasLocal=L.accounts.length||L.tx.length;
+  return`<div class="panel"><h2>Cloud sync <span id="sync2" style="text-transform:none;letter-spacing:0">${esc($('#sync span').textContent)}</span></h2><div class="pad">
+    <div>Signed in as <b>${esc(user.email||'')}</b>. Changes sync automatically, and also while offline once you are back online.</div>
+    <div class="btns">${hasLocal?`<button class="pri" id="up">Upload this device's data (${L.accounts.length} accounts, ${L.tx.length} transactions)</button>`:''}<button id="so">Sign out</button></div></div></div>`;
+}
+function vSettings(v){
+  v.innerHTML=cloudPanel()+`<div class="panel"><h2>General</h2><div class="pad"><div><label for="cu">Currency symbol</label><input id="cu" value="${esc(S.currency)}" maxlength="4"></div></div></div>
+  <div class="panel"><h2>Backup &amp; data</h2><div style="padding:16px;display:flex;gap:8px;flex-wrap:wrap">
+    <button class="pri" id="bk">Download backup (JSON)</button><button id="rs">Restore from backup</button><button id="csv">Export all transactions (CSV)</button>
+    <button class="danger" id="wipe">Erase everything</button><input type="file" id="file" accept=".json" hidden></div>
+    <div class="hint">${inCloud()?'You are viewing your cloud data. Erase and restore act on it and reach all your devices.':'This data is stored only on this device.'} Download a backup now and then.</div></div>
+  <div class="panel"><h2>How balances work</h2><div class="hint" style="padding-top:12px">Each account has a starting balance and a starting month. Every month opens with the previous month's closing balance. Expenses and income update the balance automatically, and a transfer takes money out of one account and adds it to another. Editing a starting balance updates all months. Balances are always calculated from the transactions, so devices never disagree about them.</div></div>`;
+  const si=$('#si');
+  if(si){
+    si.onclick=()=>authGo(false);$('#su').onclick=()=>authGo(true);
+    $('#pw').onkeydown=e=>{if(e.key==='Enter')authGo(false)};
+  }
+  if($('#so'))$('#so').onclick=()=>{if(confirm('Sign out? Cloud data stays safe online; this device goes back to its own local data.'))FB.signOut(auth)};
+  if($('#up'))$('#up').onclick=uploadLocal;
+  $('#cu').onchange=e=>{setCurrency(e.target.value||'₱');render()};
+  $('#bk').onclick=()=>dl(`accounts-backup-${new Date().toISOString().slice(0,10)}.json`,JSON.stringify({accounts:S.accounts,tx:S.tx,currency:S.currency},null,1),'application/json');
+  $('#rs').onclick=()=>$('#file').click();
+  $('#file').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const j=JSON.parse(t);if(!j.accounts||!j.tx)throw 0;restore(normalize(j))}catch(x){alert('That file is not a valid backup.')}})};
+  $('#csv').onclick=()=>{const q=s=>'"'+String(s??'').replace(/"/g,'""')+'"';
+    const rows=['Date,Kind,Account,To account,Amount,Category,Note',...sorted(S.tx).map(t=>[t.date,t.kind,(acct(t.acct)||{}).name,(acct(t.to)||{}).name||'',t.amount,t.cat||'',t.note||''].map(q).join(','))];
+    dl('transactions.csv','﻿'+rows.join('\n'),'text/csv')};
+  $('#wipe').onclick=wipe;
+}
+async function authGo(create){
+  const em=$('#em').value.trim(),pw=$('#pw').value;
+  if(!em||!pw){alert('Enter your email and password.');return}
+  try{create?await FB.createUserWithEmailAndPassword(auth,em,pw):await FB.signInWithEmailAndPassword(auth,em,pw)}catch(e){alert(friendly(e))}
+}
+function putMany(accs,txs){
+  if(inCloud())batchRun([...accs.map(a=>b=>b.set(docRef('accounts',a.id),a)),...txs.map(t=>b=>b.set(docRef('tx',t.id),t))]);
+}
+function uploadLocal(){
+  if(!confirm(`Upload ${L.accounts.length} accounts and ${L.tx.length} transactions from this device to your cloud database? Records with the same id are overwritten.`))return;
+  L.accounts.forEach(a=>upsert(C.accounts,a));L.tx.forEach(t=>upsert(C.tx,t));putMany(L.accounts,L.tx);
+  toast('Uploading…');render();
+}
+function restore(n){
+  if(inCloud()){
+    if(!confirm('Add the records from this backup to your cloud data? Records with the same id are overwritten.'))return;
+    n.accounts.forEach(a=>upsert(S.accounts,a));n.tx.forEach(t=>upsert(S.tx,t));putMany(n.accounts,n.tx);
+  }else{
+    if(!confirm('Replace everything on this device with this backup?'))return;
+    L.accounts=n.accounts;L.tx=n.tx;L.currency=n.currency;saveLocal();
+  }
+  toast('Restored');render();
+}
+function wipe(){
+  const msg=inCloud()?'Erase ALL accounts and transactions from your cloud database? This reaches all your devices and cannot be undone.':'Erase all accounts and transactions on this device? This cannot be undone.';
+  if(!confirm(msg)||!confirm('Really erase everything?'))return;
+  if(inCloud()){const a=S.accounts.map(x=>x.id),t=S.tx.map(x=>x.id);S.accounts=[];S.tx=[];
+    batchRun([...a.map(i=>b=>b.delete(docRef('accounts',i))),...t.map(i=>b=>b.delete(docRef('tx',i)))])}
+  else{L.accounts=[];L.tx=[];saveLocal()}
+  tab='overview';render();
+}
+
+/* ---------- dialogs ---------- */
+const dlg=$('#dlg');
+function editAccount(id,preName){
+  const a=id?acct(id):{name:preName||'',type:preName==='CASH'?'Cash':['GCASH','MAYA','GOTYME'].includes(preName)?'E-wallet':'Bank',color:COLORS[S.accounts.length%COLORS.length],start:'',since:cur};
+  dlg.innerHTML=`<form method="dialog" id="f"><h3>${id?'Edit account':'Add account'}</h3>
+   <div><label for="an">Name</label><input id="an" value="${esc(a.name)}" required placeholder="e.g. MARIBANK"></div>
+   <div class="row2"><div><label for="at">Type</label><select id="at">${TYPES.map(t=>`<option ${t===a.type?'selected':''}>${t}</option>`).join('')}</select></div>
+   <div><label for="ab">Starting balance</label><input id="ab" type="number" step="0.01" inputmode="decimal" value="${a.start}" placeholder="0.00"></div></div>
+   <div><label for="as">Starting month</label><input id="as" type="month" value="${a.since}" required></div>
+   <div><label>Color</label><div class="colors">${COLORS.map(c=>`<label style="background:${c}"><input type="radio" name="col" value="${c}" ${c===a.color?'checked':''}></label>`).join('')}</div></div>
+   <div class="hint" style="padding:0">Starting balance is what the account held at the start of its starting month. Changing it updates every month.</div>
+   <div class="acts">${id?'<button type="button" class="danger sp" id="del">Delete</button>':''}<button type="button" id="cx">Cancel</button><button class="pri" value="ok">Save</button></div></form>`;
+  dlg.showModal();$('#cx').onclick=()=>dlg.close();
+  if(id)$('#del').onclick=()=>{const n=S.tx.filter(t=>t.acct===id||t.to===id).length;
+    if(confirm(`Delete "${a.name}"${n?` and its ${n} transaction${n>1?'s':''} (including transfers to or from it)`:''}? This cannot be undone.`)){
+      delAccount(id);tab='overview';dlg.close();render();toast('Deleted')}};
+  $('#f').onsubmit=()=>{
+    const name=$('#an').value.trim();if(!name)return;
+    const o={name,type:$('#at').value,start:parseFloat($('#ab').value)||0,since:$('#as').value||cur,color:(document.querySelector('input[name=col]:checked')||{}).value||a.color};
+    const rec=id?{...a,...o}:{id:uid(),created:Date.now(),...o};
+    putAccount(rec);
+    if(!id){tab='a'+rec.id;if(rec.since>cur){cur=rec.since;P.cur=cur;savePrefs()}}
+    render();toast('Saved')};
+}
+function editTx(id,defAcct,defKind){
+  const today=new Date().toISOString().slice(0,10);
+  const first=accountsSorted()[0];
+  const t=id?S.tx.find(x=>x.id===id):{kind:defKind||'expense',date:today.startsWith(cur)?today:cur+'-01',amount:'',acct:defAcct||(acct(P.lastAcct)?P.lastAcct:first.id),to:null,cat:'',note:''};
+  if(!t)return;
+  const opts=(sel,skip)=>accountsSorted().filter(a=>a.id!==skip).map(a=>`<option value="${esc(a.id)}" ${a.id===sel?'selected':''}>${esc(a.name)}</option>`).join('');
+  dlg.innerHTML=`<form method="dialog" id="f"><h3>${id?'Edit transaction':'Add transaction'}</h3>
+   <div class="seg">${['expense','income','transfer'].map(k=>`<label><input type="radio" name="k" value="${k}" ${t.kind===k?'checked':''}>${k[0].toUpperCase()+k.slice(1)}</label>`).join('')}</div>
+   <div class="row2"><div><label for="ta">Amount</label><input id="ta" type="number" step="0.01" min="0.01" inputmode="decimal" required value="${t.amount}"></div>
+   <div><label for="td">Date</label><input id="td" type="date" required value="${t.date}"></div></div>
+   <div><label for="tc" id="lc">Account</label><select id="tc">${opts(t.acct)}</select></div>
+   <div id="wto"><label for="tt">To account</label><select id="tt"></select></div>
+   <div id="wcat"><label for="tg">Category</label><input id="tg" list="dl-cats" value="${esc(t.cat)}" placeholder="Food, Bills…"></div>
+   <div><label for="tn">Note</label><input id="tn" value="${esc(t.note)}"></div>
+   <div class="acts">${id?'<button type="button" class="danger sp" id="del">Delete</button>':''}<button type="button" id="cx">Cancel</button><button class="pri" value="ok">Save</button></div></form>`;
+  dlg.showModal();
+  const kind=()=>document.querySelector('input[name=k]:checked').value;
+  const sync=()=>{const k=kind();$('#wto').style.display=k==='transfer'?'':'none';$('#wcat').style.display=k==='transfer'?'none':'';
+    $('#lc').textContent=k==='transfer'?'From account':'Account';
+    const from=$('#tc').value,keep=$('#tt').value||t.to;
+    $('#tt').innerHTML=opts(keep&&keep!==from?keep:null,from)};
+  document.querySelectorAll('input[name=k]').forEach(r=>r.onchange=sync);$('#tc').onchange=sync;sync();
+  if(!id)$('#ta').focus();
+  $('#cx').onclick=()=>dlg.close();
+  if(id)$('#del').onclick=()=>{if(confirm('Delete this transaction?')){delTx(id);dlg.close();render();toast('Deleted')}};
+  $('#f').onsubmit=e=>{
+    const amt=parseFloat($('#ta').value);if(!(amt>0)){e.preventDefault();return}
+    const k=kind(),from=$('#tc').value,to=k==='transfer'?$('#tt').value:null;
+    if(k==='transfer'&&!to){e.preventDefault();alert('Add a second account first to make a transfer.');return}
+    let cat=k==='transfer'?'':$('#tg').value.trim();
+    cat=cats().find(c=>c.toLowerCase()===cat.toLowerCase())||cat;
+    const n={id:id||uid(),created:id?(t.created||Date.now()):Date.now(),kind:k,date:$('#td').value,amount:amt,acct:from,to,cat,note:$('#tn').value.trim()};
+    [from,to].forEach(x=>{const a=x&&acct(x);if(a&&mOf(n.date)<a.since)putAccount({...a,since:mOf(n.date)})});
+    putTx(n);
+    P.lastAcct=from;
+    if(mOf(n.date)!==cur){cur=mOf(n.date);toast('Saved in '+mlabel(cur))}else toast('Saved');
+    P.cur=cur;savePrefs();render()};
+}
+
+/* ---------- start ---------- */
+render();
+if('serviceWorker' in navigator&&location.protocol.startsWith('http')){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+initCloud();
+</script>
+</body>
+</html>
