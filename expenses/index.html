@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>2026 Expenses</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-maskable-512.png">
+<meta name="theme-color" content="#9a7400">
+<meta name="mobile-web-app-capable" content="yes">
+<style>
+:root{--bg:#fbf7ec;--card:#fff;--ink:#2b2410;--mute:#7a6f52;--line:#e9dfc2;--acc:#9a7400;--accsoft:#fde9a2;--red:#c62828;--green:#1b8a4b;--onacc:#fff;--shadow:0 1px 2px rgba(60,45,0,.08)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+header{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5;padding-top:env(safe-area-inset-top)}
+.top{max-width:980px;margin:0 auto;padding:10px 16px 0;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px}
+h1{margin:0;font-size:18px}
+#themebtn{width:30px;height:30px;padding:0;border-radius:999px;font-size:15px;line-height:1}
+#sync{font-size:12px;font-weight:600;border:1px solid var(--line);border-radius:999px;padding:2px 9px;color:var(--mute);cursor:pointer;background:transparent;display:inline-flex;align-items:center;gap:6px}
+#sync i{width:8px;height:8px;border-radius:50%;background:var(--mute)}
+#sync.ok i{background:var(--green)}#sync.busy i{background:#d99a06}#sync.off i{background:var(--red)}
+.mnav{display:flex;align-items:center;gap:6px}
+.mnav button{width:34px;height:34px;padding:0;font-size:18px}
+.mnav input{width:auto;font-weight:600}
+nav{max-width:980px;margin:6px auto 0;padding:0 8px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{border:0;background:transparent;border-bottom:3px solid transparent;border-radius:0;padding:10px 12px;font-weight:600;color:var(--mute);white-space:nowrap}
+nav button.on{color:var(--ink);border-bottom-color:var(--acc)}
+main{max-width:980px;margin:0 auto;padding:16px 16px 96px}
+button,input,select{font:inherit;color:inherit}
+button{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 14px;cursor:pointer}
+button.pri{background:var(--acc);border-color:var(--acc);color:var(--onacc);font-weight:600}
+button.danger{color:var(--red)}
+input,select{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%}
+label{display:block;font-size:12px;color:var(--mute);margin-bottom:3px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.hero{background:var(--acc);color:var(--onacc);border-radius:16px;padding:18px 20px;margin-bottom:14px}
+.hero .k{font-size:12px;text-transform:uppercase;letter-spacing:.6px;opacity:.85;font-weight:600}
+.hero .v{font-size:32px;font-weight:800;font-variant-numeric:tabular-nums}
+.hero .sub{display:flex;gap:22px;margin-top:8px;flex-wrap:wrap;font-size:13px}
+.hero .sub b{display:block;font-size:16px;font-variant-numeric:tabular-nums}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:16px;overflow:hidden;box-shadow:var(--shadow)}
+.panel>h2{margin:0;padding:11px 16px;border-bottom:1px solid var(--line);font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--mute);display:flex;justify-content:space-between;align-items:center;gap:8px}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{padding:9px 14px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.4px}
+td.n,th.n{text-align:right}
+td.wrap{white-space:normal;min-width:130px}
+tr:last-child td{border-bottom:0}
+tr.click{cursor:pointer}tr.click:hover{background:var(--accsoft)}
+.neg{color:var(--red);font-weight:700}.pos{color:var(--green)}
+.empty{padding:28px 16px;text-align:center;color:var(--mute)}
+.bar{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}.bar input{flex:1;min-width:160px}
+.fab{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom));width:58px;height:58px;border-radius:50%;font-size:30px;line-height:1;padding:0;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+dialog{border:1px solid var(--line);border-radius:16px;padding:0;background:var(--card);color:var(--ink);width:min(440px,94vw);max-height:92vh}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+dialog form{padding:18px;display:grid;gap:12px}
+dialog h3{margin:0}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.acts{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}.acts .sp{margin-right:auto}
+.lists{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;padding:16px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.chip{background:var(--accsoft);border:1px solid var(--line);border-radius:999px;padding:3px 6px 3px 10px;font-size:13px;display:inline-flex;gap:6px;align-items:center}
+.chip b{cursor:pointer;color:var(--mute);font-weight:400}
+.hint{color:var(--mute);font-size:13px;padding:0 16px 14px}
+.pad{padding:16px;display:grid;gap:10px;max-width:420px}
+.swatches{display:flex;gap:12px;flex-wrap:wrap}
+.swatches label{margin:0;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;font-size:11px;text-transform:none;letter-spacing:0;color:var(--mute)}
+.swatches i{width:34px;height:34px;border-radius:50%;border:3px solid transparent;box-shadow:inset 0 0 0 2px var(--card)}
+.swatches input{display:none}.swatches input:checked+i{border-color:var(--ink)}
+.seg2{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:10px;overflow:hidden;max-width:320px}
+.seg2 label{margin:0;padding:9px;text-align:center;cursor:pointer;font-size:13px;text-transform:none;letter-spacing:0;color:var(--ink);font-weight:600}
+.seg2 input{display:none}.seg2 label:has(input:checked){background:var(--acc);color:var(--onacc)}
+.toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#222;color:#fff;padding:8px 14px;border-radius:8px;opacity:0;transition:.25s;pointer-events:none;z-index:20;font-size:14px;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
+@media print{header,.fab,.bar,button{display:none!important}}
+</style>
+<script>
+/* theme: applied before first paint. mode = auto|light|dark */
+window.PAL={
+ gold  :{n:'Gold',sw:'#b8860b',l:{acc:'#9a7400',soft:'#fde9a2',bg:'#fbf7ec',line:'#e9dfc2'},d:{acc:'#e0b433',soft:'#3d3210',bg:'#17140c',card:'#211d12',line:'#383122'}},
+ green :{n:'Emerald',sw:'#0f7a5a',l:{acc:'#0f7a5a',soft:'#dff3ea',bg:'#f4f6f3',line:'#e2e8e3'},d:{acc:'#3ccf9b',soft:'#173a2d',bg:'#0f1512',card:'#18211c',line:'#27342d'}},
+ blue  :{n:'Ocean',sw:'#2563eb',l:{acc:'#2563eb',soft:'#dbe7ff',bg:'#f3f5fa',line:'#e0e6f0'},d:{acc:'#6ea0ff',soft:'#1a2a4d',bg:'#0e131c',card:'#172030',line:'#26324a'}},
+ violet:{n:'Violet',sw:'#7c3aed',l:{acc:'#7c3aed',soft:'#ece3ff',bg:'#f6f4fa',line:'#e8e3f0'},d:{acc:'#a98bff',soft:'#2a2150',bg:'#14111c',card:'#1f1a2c',line:'#342d48'}},
+ rose  :{n:'Rose',sw:'#e11d48',l:{acc:'#e11d48',soft:'#ffe1e8',bg:'#faf4f5',line:'#f0e3e6'},d:{acc:'#ff7a98',soft:'#4a1a27',bg:'#1a1114',card:'#261a1e',line:'#3d2830'}},
+ slate :{n:'Slate',sw:'#334155',l:{acc:'#334155',soft:'#e2e8f0',bg:'#f3f4f6',line:'#e2e5ea'},d:{acc:'#94a3b8',soft:'#26303d',bg:'#12151a',card:'#1b2028',line:'#2c3440'}}
+};
+window.applyTheme=function(mode,accent){
+  var dark=mode==='dark'||(mode!=='light'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+  var p=PAL[accent]||PAL.gold,t=dark?p.d:p.l,r=document.documentElement.style;
+  var v={'--acc':t.acc,'--accsoft':t.soft,'--bg':t.bg,'--line':t.line,'--card':dark?t.card:'#ffffff',
+    '--ink':dark?'#f3ecd8':'#2b2410','--mute':dark?'#a79f86':'#7a6f52','--red':dark?'#ff7b72':'#c62828','--green':dark?'#6fd99a':'#1b8a4b',
+    '--onacc':dark?'#17140c':'#ffffff','--shadow':dark?'none':'0 1px 2px rgba(60,45,0,.08)'};
+  for(var k in v)r.setProperty(k,v[k]);
+  document.documentElement.style.colorScheme=dark?'dark':'light';
+  var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',t.acc);
+};
+(function(){var p={};try{p=JSON.parse(localStorage.getItem('expenses-app-prefs'))||{}}catch(e){}
+ window.__theme={mode:p.mode||'auto',accent:p.accent||'gold'};applyTheme(__theme.mode,__theme.accent);
+ if(window.matchMedia)matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){if(__theme.mode==='auto')applyTheme('auto',__theme.accent)});})();
+</script>
+<!-- one Firebase config for both apps: it lives in the main folder, one level up -->
+<script src="../firebase-config.js"></script>
+</head>
+<body>
+<header>
+  <div class="top"><div class="brand"><h1>2026 Expenses</h1><button id="sync" title="Sync status"><i></i><span>Local only</span></button><button id="themebtn" title="Theme"></button></div>
+    <div class="mnav"><button id="prev" title="Previous month">‹</button><input type="month" id="mon"><button id="next" title="Next month">›</button></div></div>
+  <nav id="tabs"></nav>
+</header>
+<main id="view"></main>
+<button class="fab pri" id="fab" title="Add outflow">+</button>
+<dialog id="dlg"></dialog>
+<div class="toast" id="toast"></div>
+<datalist id="dl-buckets"></datalist><datalist id="dl-types"></datalist><datalist id="dl-categories"></datalist>
+
+<script>
+/* =====================================================================
+   2026 Expenses: local-first monthly expenses tracker.
+   Works offline. Data stays on the device until you sign in, then every
+   record is stored in your own Firebase Firestore and synced across devices.
+   ===================================================================== */
+const LKEY='expenses-app-v2', PKEY='expenses-app-prefs';
+const FB_VERSION='10.14.1';
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const LISTNAMES=[['buckets','Allocations (money monitor)'],['types','Types (bank / wallet)'],['categories','Categories']];
+const defLists=()=>({buckets:['House & Utilities','Food & Essentials','Allowance','Savings'],types:['CASH','GCASH','MAYA','BDO','BPI'],categories:['Grocery','Market','Bills','Transport','Personal Expense']});
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ymOf=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const cents=n=>Math.round((+n||0)*100);
+const mlabel=k=>{const[y,m]=k.split('-').map(Number);return MONTHS[m-1]+' '+y};
+function shift(k,d){let[y,m]=k.split('-').map(Number);m+=d;while(m<1){m+=12;y--}while(m>12){m-=12;y++}return y+'-'+String(m).padStart(2,'0')}
+const md=d=>{if(!d)return'—';const[y,m,da]=d.split('-').map(Number);return MONTHS[m-1].slice(0,3)+' '+da};
+const monthOf=r=>r.month||(r.date||'').slice(0,7);
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('on'),2600)}
+function dl(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+
+/* ---------- data model ----------
+   outflow: {id,month,date,amount,type,deduction,category,comment,created}
+   inflow:  {id,month,date,amount,alloc,created}
+   lists:   {buckets,types,categories}   (suggestions for the entry forms)
+   Every row has its own id, so each one syncs on its own. */
+const blank=()=>({outflow:[],inflow:[],lists:defLists(),currency:'₱'});
+function normalize(j){
+  const out=[],inn=[],t0=Date.now();
+  const mkOut=(r,i,k,idp)=>({id:String(r.id||idp+i),month:r.month||(r.date||'').slice(0,7)||k||'',date:r.date||'',amount:+r.amount||0,type:String(r.type||'').trim().toUpperCase(),deduction:String(r.deduction||'').trim(),category:String(r.category||'').trim(),comment:String(r.comment||'').trim(),created:r.created||(k?Date.parse(k+'-01'):t0)+i});
+  const mkIn=(r,i,k,idp)=>({id:String(r.id||idp+i),month:r.month||(r.date||'').slice(0,7)||k||'',date:r.date||'',amount:+r.amount||0,alloc:String(r.alloc||'').trim(),created:r.created||(k?Date.parse(k+'-01'):t0)+i});
+  if(j.months){                       // older backup format {lists, months:{'2026-10':{inflow,outflow}}}
+    for(const k of Object.keys(j.months)){
+      (j.months[k].outflow||[]).forEach((r,i)=>out.push(mkOut(r,i,k,'o-'+k+'-')));
+      (j.months[k].inflow||[]).forEach((r,i)=>inn.push(mkIn(r,i,k,'i-'+k+'-')));
+    }
+  }else{
+    (j.outflow||[]).forEach((r,i)=>out.push(mkOut(r,i,'', 'o-x-')));
+    (j.inflow||[]).forEach((r,i)=>inn.push(mkIn(r,i,'','i-x-')));
+  }
+  const lists=defLists();
+  for(const [l] of LISTNAMES){lists[l]=[...new Set([...(j.lists&&j.lists[l]||[]).map(x=>String(x).trim()).filter(Boolean)])]}
+  return{outflow:out,inflow:inn,lists,currency:j.currency||'₱'};
+}
+function loadLocal(){try{const r=localStorage.getItem(LKEY);if(r){const j=JSON.parse(r);return{outflow:j.outflow||[],inflow:j.inflow||[],lists:{...defLists(),...(j.lists||{})},currency:j.currency||'₱'}}}catch(e){}return blank()}
+function loadPrefs(){try{return JSON.parse(localStorage.getItem(PKEY))||{}}catch(e){return{}}}
+function savePrefs(){try{localStorage.setItem(PKEY,JSON.stringify(P))}catch(e){}}
+function saveLocal(){try{localStorage.setItem(LKEY,JSON.stringify(L))}catch(e){toast('Could not save: browser storage is blocked')}}
+
+const L=loadLocal();            // data stored on this device only
+let C=blank();                  // mirror of the cloud database
+const P=loadPrefs();            // {cur, cloud, mode, accent}
+let S=P.cloud?C:L;              // the store being shown right now
+let cur=P.cur||ymOf(new Date()), tab='overview', filter='';
+
+/* ---------- cloud state ---------- */
+let FB=null,fbApp=null,auth=null,db=null,user=null,unsubs=[];
+let cloudStatus='off';          // off | no-sdk | signed-out | connecting | live
+const loaded={outflow:false,inflow:false},pend={outflow:false,inflow:false,lists:false};
+const cloudConfigured=()=>{const c=window.FIREBASE_CONFIG;return !!(c&&c.apiKey&&c.projectId&&!/PASTE/.test(c.apiKey+c.projectId))};
+const inCloud=()=>S===C;
+const COLL={outflow:'exp_outflow',inflow:'exp_inflow'};   // own names, so they never mix with other apps' data
+function upsert(arr,rec){const i=arr.findIndex(x=>x.id===rec.id);if(i<0)arr.push(rec);else arr[i]=rec}
+const colRef=n=>FB.collection(db,'users',user.uid,COLL[n]);
+const docRef=(n,id)=>FB.doc(colRef(n),id);
+const listsRef=()=>FB.doc(db,'users',user.uid,'meta','exp_lists');
+function cloudErr(e){console.error(e);toast('Sync problem: '+(e&&e.code?e.code:e&&e.message||e))}
+function batchRun(fns){for(let i=0;i<fns.length;i+=400){const b=FB.writeBatch(db);fns.slice(i,i+400).forEach(f=>f(b));b.commit().catch(cloudErr)}}
+
+function putRow(kind,r){upsert(S[kind],r);if(inCloud())FB.setDoc(docRef(kind,r.id),r).catch(cloudErr);else saveLocal()}
+function delRow(kind,id){S[kind]=S[kind].filter(x=>x.id!==id);if(inCloud())FB.deleteDoc(docRef(kind,id)).catch(cloudErr);else saveLocal()}
+function saveLists(){if(inCloud())FB.setDoc(listsRef(),{...S.lists,currency:S.currency},{merge:true}).catch(cloudErr);else saveLocal()}
+function ensureList(l,v){v=(v||'').trim();if(v&&!allOf(l).some(x=>x.toLowerCase()===v.toLowerCase())){S.lists[l].push(v);saveLists()}}
+function putMany(out,inn,lists){
+  if(!inCloud())return;
+  batchRun([...out.map(r=>b=>b.set(docRef('outflow',r.id),r)),...inn.map(r=>b=>b.set(docRef('inflow',r.id),r))]);
+  if(lists)saveLists();
+}
+
+/* ---------- loading the Firebase SDK (cached by the service worker for offline use) ---------- */
+async function loadFB(){
+  if(window.FB)return window.FB;
+  const b=`https://www.gstatic.com/firebasejs/${FB_VERSION}/`;
+  const [a,au,fs]=await Promise.all([import(b+'firebase-app.js'),import(b+'firebase-auth.js'),import(b+'firebase-firestore.js')]);
+  return window.FB={...a,...au,...fs};
+}
+async function initCloud(){
+  if(!cloudConfigured()){cloudStatus='off';S=L;P.cloud=false;savePrefs();render();return}
+  try{FB=await loadFB()}catch(e){console.error(e);cloudStatus='no-sdk';render();return}
+  try{
+    fbApp=FB.initializeApp(window.FIREBASE_CONFIG);
+    auth=FB.getAuth(fbApp);
+    db=FB.initializeFirestore(fbApp,{localCache:FB.persistentLocalCache({tabManager:FB.persistentMultipleTabManager()})});
+  }catch(e){console.error(e);cloudStatus='no-sdk';render();return}
+  FB.onAuthStateChanged(auth,u=>{
+    user=u;stopListeners();
+    if(u){P.cloud=true;S=C;C.outflow=[];C.inflow=[];C.lists=defLists();loaded.outflow=loaded.inflow=false;cloudStatus='connecting';startListeners()}
+    else{P.cloud=false;S=L;cloudStatus='signed-out'}
+    savePrefs();render();
+  });
+}
+function startListeners(){
+  const snap=n=>FB.onSnapshot(colRef(n),s=>{C[n]=s.docs.map(d=>d.data());loaded[n]=true;pend[n]=s.metadata.hasPendingWrites;
+    if(loaded.outflow&&loaded.inflow)cloudStatus='live';softRender()},cloudErr);
+  unsubs=[snap('outflow'),snap('inflow'),
+    FB.onSnapshot(listsRef(),s=>{if(s.exists()){const d=s.data();C.lists={...defLists(),buckets:d.buckets||[],types:d.types||[],categories:d.categories||[]};if(d.currency)C.currency=d.currency}
+      pend.lists=s.metadata.hasPendingWrites;softRender()},cloudErr)];
+}
+function stopListeners(){unsubs.forEach(u=>{try{u()}catch(e){}});unsubs=[];pend.outflow=pend.inflow=pend.lists=false}
+function softRender(){const a=document.activeElement;if(tab==='settings'&&a&&$('#view').contains(a)){renderSync();return}render()}
+function renderSync(){
+  const b=$('#sync'),t=b.querySelector('span');let cls='',txt='Local only';
+  if(S===C||P.cloud){
+    if(cloudStatus==='no-sdk'){cls='off';txt='Sync unavailable'}
+    else if(!navigator.onLine){cls='off';txt='Offline · saved on device'}
+    else if(cloudStatus!=='live'){cls='busy';txt='Connecting…'}
+    else if(pend.outflow||pend.inflow||pend.lists){cls='busy';txt='Syncing…'}
+    else{cls='ok';txt='Synced'}
+  }
+  b.className=cls;t.textContent=txt;
+}
+window.addEventListener('online',renderSync);window.addEventListener('offline',renderSync);
+$('#sync').onclick=()=>{tab='settings';render()};
+
+/* ---------- theme ---------- */
+const MODE_ICON={auto:'◐',light:'☀',dark:'☾'};
+function setTheme(mode,accent){
+  P.mode=mode||P.mode||'auto';P.accent=accent||P.accent||'gold';
+  window.__theme={mode:P.mode,accent:P.accent};applyTheme(P.mode,P.accent);savePrefs();
+  const b=$('#themebtn');b.textContent=MODE_ICON[P.mode];b.title='Theme: '+P.mode+' (tap to change)';
+}
+$('#themebtn').onclick=()=>{const order=['auto','light','dark'];setTheme(order[(order.indexOf(P.mode||'auto')+1)%3]);if(tab==='settings')render();toast('Theme: '+P.mode)};
+function themePanel(){
+  const m=P.mode||'auto',a=P.accent||'gold';
+  return`<div class="panel"><h2>Appearance</h2><div class="pad" style="max-width:none">
+    <div><label>Mode</label><div class="seg2">${['auto','light','dark'].map(k=>`<label><input type="radio" name="tm" value="${k}" ${m===k?'checked':''}>${k[0].toUpperCase()+k.slice(1)}</label>`).join('')}</div></div>
+    <div><label>Color</label><div class="swatches">${Object.entries(PAL).map(([k,p])=>`<label title="${p.n}"><input type="radio" name="ta" value="${k}" ${a===k?'checked':''}><i style="background:${p.sw}"></i>${p.n}</label>`).join('')}</div></div>
+    <div class="hint" style="padding:0">Auto follows your phone or computer's light/dark setting. Saved on each device separately.</div></div></div>`;
+}
+
+/* ---------- calculations ---------- */
+const money=c=>(c<0?'-':'')+S.currency+(Math.abs(c)/100).toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2});
+const sum=a=>a.reduce((s,x)=>s+cents(x.amount),0);
+const allOf=l=>[...new Set([...(S.lists[l]||[]),...S.outflow.map(r=>({buckets:r.deduction,types:r.type,categories:r.category})[l]),...(l==='buckets'?S.inflow.map(r=>r.alloc):[])].filter(Boolean))];
+const mo=(k)=>S.outflow.filter(r=>monthOf(r)===k);
+const mi=(k)=>S.inflow.filter(r=>monthOf(r)===k);
+function groupSum(rows,f){const m={};rows.forEach(r=>{const k=r[f]||'(none)';m[k]=(m[k]||0)+cents(r.amount)});return m}
+function compare(a,b){return [...new Set([...Object.keys(a),...Object.keys(b)])].sort((x,y)=>x.localeCompare(y)).map(n=>({n,c:a[n]||0,p:b[n]||0}))}
+function monitor(k){
+  const al=groupSum(mi(k),'alloc'),sp=groupSum(mo(k),'deduction');
+  const order=[...new Set([...Object.keys(al),...Object.keys(sp)])];
+  return order.map(n=>({n,budget:al[n]||0,spent:sp[n]||0,left:(al[n]||0)-(sp[n]||0)}));
+}
+
+/* ---------- navigation ---------- */
+const setCur=k=>{cur=k;P.cur=k;savePrefs();render()};
+$('#prev').onclick=()=>setCur(shift(cur,-1));$('#next').onclick=()=>setCur(shift(cur,1));
+$('#mon').onchange=e=>{if(e.target.value)setCur(e.target.value)};
+const TABS=[['overview','Overview'],['outflow','Outflow'],['inflow','Inflow'],['compare','Comparison'],['settings','Settings']];
+function renderTabs(){
+  $('#tabs').innerHTML=TABS.map(([id,t])=>`<button class="${tab===id?'on':''}" data-t="${id}">${t}</button>`).join('');
+  $('#tabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render();window.scrollTo(0,0)});
+}
+function waiting(){return inCloud()&&(cloudStatus==='no-sdk'||!(loaded.outflow&&loaded.inflow))}
+function render(){
+  $('#mon').value=cur;
+  ['buckets','types','categories'].forEach(l=>$('#dl-'+l).innerHTML=allOf(l).map(x=>`<option value="${esc(x)}">`).join(''));
+  renderTabs();renderSync();
+  $('#fab').style.display=(tab==='settings'||tab==='compare'||waiting())?'none':'block';
+  $('#fab').title=tab==='inflow'?'Add inflow':'Add outflow';
+  const v=$('#view');
+  if(tab==='settings')vSettings(v);
+  else if(waiting())v.innerHTML=cloudStatus==='no-sdk'
+    ?`<div class="panel"><div class="empty"><b style="color:var(--ink)">Can't load the sync library</b><br>Connect to the internet once so the app can download and keep it. Your data is safe in the cloud.</div></div>`
+    :`<div class="panel"><div class="empty">Loading your data…</div></div>`;
+  else ({overview:vOverview,outflow:vOutflow,inflow:vInflow,compare:vCompare})[tab](v);
+}
+$('#fab').onclick=()=>tab==='inflow'?editIn(null):editOut(null);
+
+/* ---------- views ---------- */
+function vOverview(v){
+  const inn=sum(mi(cur)),out=sum(mo(cur)),left=inn-out,mon=monitor(cur);
+  let h=`<div class="hero"><div class="k">Total remaining · ${mlabel(cur)}</div><div class="v">${money(left)}</div>
+    <div class="sub"><span>Total inflow<b>${money(inn)}</b></span><span>Total outflow<b>${money(out)}</b></span></div></div>`;
+  if(!mi(cur).length&&!mo(cur).length){
+    const pk=shift(cur,-1),has=mi(pk).length;
+    h+=`<div class="panel"><div class="empty">Nothing recorded for ${mlabel(cur)} yet.<br><br>${has?`<button class="pri" id="cp">Copy inflow allocations from ${mlabel(pk)}</button> `:''}<button id="addo">Add first outflow</button></div></div>`;
+  }
+  h+=`<div class="panel"><h2>Money monitor <span style="font-weight:400;text-transform:none;letter-spacing:0">budget left per allocation</span></h2>`+
+    (mon.length?`<div class="scroll"><table><tr><th>Allocation</th><th class="n">Budget</th><th class="n">Spent</th><th class="n">Remaining</th></tr>`+
+      mon.map(r=>`<tr><td>${esc(r.n)}</td><td class="n">${money(r.budget)}</td><td class="n">${money(r.spent)}</td><td class="n ${r.left<0?'neg':''}">${money(r.left)}</td></tr>`).join('')+`</table></div>`:`<div class="empty">No allocations yet. Add inflow first.</div>`)+`</div>`;
+  v.innerHTML=h;
+  const cp=$('#cp');if(cp)cp.onclick=()=>{const rows=mi(shift(cur,-1)).map((i,n)=>({id:uid(),month:cur,date:'',amount:i.amount,alloc:i.alloc,created:Date.now()+n}));rows.forEach(r=>putRow('inflow',r));render();toast('Copied')};
+  const ao=$('#addo');if(ao)ao.onclick=()=>editOut(null);
+}
+function vOutflow(v){
+  const q=filter.toLowerCase();
+  const rows=mo(cur).sort((a,b)=>(b.created||0)-(a.created||0)).filter(r=>!q||[r.type,r.deduction,r.category,r.comment,String(r.amount),r.date].some(x=>(x||'').toLowerCase().includes(q)));
+  let h=`<div class="bar"><input id="q" type="search" placeholder="Search comments, category, type…" value="${esc(filter)}"></div><div class="panel"><h2>Outflow <span>${money(sum(rows))}</span></h2>`;
+  h+=rows.length?`<div class="scroll"><table><tr><th>Date</th><th class="n">Amount</th><th>Type</th><th>Deduction</th><th>Category</th><th>Comments</th></tr>`+
+    rows.map(r=>`<tr class="click" data-id="${esc(r.id)}"><td>${md(r.date)}</td><td class="n">${money(cents(r.amount))}</td><td>${esc(r.type)}</td><td>${esc(r.deduction)}</td><td>${esc(r.category)}</td><td class="wrap">${esc(r.comment)}</td></tr>`).join('')+`</table></div><div class="hint" style="padding-top:10px">Tap a row to edit or delete it.</div>`:`<div class="empty">No outflow ${filter?'matches':'yet this month'}.</div>`;
+  v.innerHTML=h+`</div>`;
+  $('#q').oninput=e=>{filter=e.target.value;const p=e.target.selectionStart;vOutflow(v);const x=$('#q');x.focus();x.setSelectionRange(p,p)};
+  v.querySelectorAll('tr.click').forEach(t=>t.onclick=()=>editOut(t.dataset.id));
+}
+function vInflow(v){
+  const rows=mi(cur).sort((a,b)=>(a.created||0)-(b.created||0));
+  let h=`<div class="panel"><h2>Inflow <span>${money(sum(rows))}</span></h2>`;
+  h+=rows.length?`<div class="scroll"><table><tr><th>Date</th><th class="n">Amount</th><th>Allocation</th></tr>`+rows.map(r=>`<tr class="click" data-id="${esc(r.id)}"><td>${md(r.date)}</td><td class="n">${money(cents(r.amount))}</td><td>${esc(r.alloc)}</td></tr>`).join('')+`</table></div><div class="hint" style="padding-top:10px">Tap a row to edit or delete it.</div>`:`<div class="empty">No inflow yet. Use + to add.</div>`;
+  v.innerHTML=h+`</div>`;
+  v.querySelectorAll('tr.click').forEach(t=>t.onclick=()=>editIn(t.dataset.id));
+}
+function vCompare(v){
+  const pk=shift(cur,-1),c=mo(cur),p=mo(pk);
+  const tbl=(title,rows,sub)=>{const tc=rows.reduce((s,r)=>s+r.c,0),tp=rows.reduce((s,r)=>s+r.p,0);
+    return`<div class="panel"><h2>${title}</h2>`+(rows.length?`<div class="scroll"><table><tr><th>${sub}</th><th class="n">${mlabel(cur).split(' ')[0]}</th><th class="n">${mlabel(pk).split(' ')[0]}</th><th class="n">Change</th></tr>`+
+      rows.map(r=>{const d=r.c-r.p;return`<tr><td>${esc(r.n)}</td><td class="n">${money(r.c)}</td><td class="n">${money(r.p)}</td><td class="n ${d>0?'neg':d<0?'pos':''}">${d>0?'+':''}${money(d)}</td></tr>`}).join('')+
+      `<tr><td><b>Total</b></td><td class="n"><b>${money(tc)}</b></td><td class="n"><b>${money(tp)}</b></td><td class="n"><b>${money(tc-tp)}</b></td></tr></table></div>`:`<div class="empty">No data.</div>`)+`</div>`};
+  v.innerHTML=tbl('Monthly expenses by allocation',compare(groupSum(c,'deduction'),groupSum(p,'deduction')),'Allocation')+
+    tbl('Monthly expenses by type',compare(groupSum(c,'type'),groupSum(p,'type')),'Type')+
+    tbl('Monthly expenses by category',compare(groupSum(c,'category'),groupSum(p,'category')),'Category')+
+    `<div class="hint">Previous month is always the calendar month before the one selected. Red means you spent more than last month.</div>`;
+}
+
+/* ---------- settings ---------- */
+function friendly(e){
+  const c=e&&e.code||'';
+  if(/invalid-credential|wrong-password|user-not-found|invalid-login/.test(c))return'Wrong email or password.';
+  if(/email-already-in-use/.test(c))return'That email already has an account. Use Sign in.';
+  if(/weak-password/.test(c))return'Password must be at least 6 characters.';
+  if(/invalid-email/.test(c))return'That email address is not valid.';
+  if(/network/.test(c))return'No internet connection. Signing in needs internet.';
+  if(/operation-not-allowed|configuration-not-found/.test(c))return'Email/Password sign-in is not switched on in your Firebase project.';
+  return'Sign-in failed: '+(c||e.message||e);
+}
+function cloudPanel(){
+  const wrap=t=>`<div class="panel"><h2>Cloud sync</h2>${t}</div>`;
+  if(!cloudConfigured())return wrap(`<div class="hint" style="padding-top:12px">Not set up. The app works on this device only. The Firebase settings come from <b>firebase-config.js</b> in the main folder.</div>`);
+  if(cloudStatus==='no-sdk')return wrap(`<div class="hint" style="padding-top:12px">The sync library could not be loaded. Connect to the internet once and reload.</div>`);
+  if(!auth)return wrap(`<div class="hint" style="padding-top:12px">Loading…</div>`);
+  if(!user)return wrap(`<div class="pad"><div class="hint" style="padding:0">Sign in with the same login as your other app, and your expenses sync across devices. Data now on this device stays here until you upload it.</div>
+    <div><label for="em">Email</label><input id="em" type="email" autocomplete="username"></div>
+    <div><label for="pw">Password</label><input id="pw" type="password" autocomplete="current-password"></div>
+    <div class="acts" style="justify-content:flex-start"><button class="pri" id="si">Sign in</button><button id="su">Create account</button></div></div>`);
+  const n=L.outflow.length+L.inflow.length;
+  return wrap(`<div class="pad"><div>Signed in as <b>${esc(user.email||'')}</b>. Changes sync automatically, also while offline once you are back online.</div>
+    <div class="acts" style="justify-content:flex-start">${n?`<button class="pri" id="up">Upload this device's data (${L.outflow.length} outflow, ${L.inflow.length} inflow rows)</button>`:''}<button id="so">Sign out</button></div></div>`);
+}
+function vSettings(v){
+  v.innerHTML=cloudPanel()+themePanel()+`<div class="panel"><h2>Lists</h2><div class="lists">`+LISTNAMES.map(([l,t])=>`<div><label>${t}</label><div class="chips">`+
+    (S.lists[l]||[]).map((x,i)=>`<span class="chip">${esc(x)}<b data-l="${l}" data-i="${i}" title="Remove">✕</b></span>`).join('')+`</div><input data-add="${l}" placeholder="Add new + Enter"></div>`).join('')+`</div>
+    <div class="hint">New values you type while adding entries are added here automatically. Removing one here does not change old entries.</div></div>
+  <div class="panel"><h2>General</h2><div class="pad"><div><label for="cu">Currency symbol</label><input id="cu" value="${esc(S.currency)}" maxlength="4"></div></div></div>
+  <div class="panel"><h2>Backup &amp; data</h2><div style="padding:16px;display:flex;gap:8px;flex-wrap:wrap">
+    <button class="pri" id="bk">Download backup (JSON)</button><button id="rs">Restore / import data</button><button id="csv">Export ${mlabel(cur)} (CSV)</button><button id="pr">Print</button>
+    <button class="danger" id="wipe">Erase everything</button><input type="file" id="file" accept=".json" hidden></div>
+    <div class="hint">${inCloud()?'You are viewing your cloud data. Import and erase act on it and reach all your devices.':'This data is stored only on this device.'} Importing adds the records in the file; the same record is never duplicated. Download a backup now and then.</div></div>`;
+  const si=$('#si');if(si){si.onclick=()=>authGo(false);$('#su').onclick=()=>authGo(true);$('#pw').onkeydown=e=>{if(e.key==='Enter')authGo(false)}}
+  if($('#so'))$('#so').onclick=()=>{if(confirm('Sign out? Cloud data stays safe online; this device goes back to its own local data.'))FB.signOut(auth)};
+  if($('#up'))$('#up').onclick=uploadLocal;
+  v.querySelectorAll('input[name=tm]').forEach(r=>r.onchange=()=>setTheme(r.value,null));
+  v.querySelectorAll('input[name=ta]').forEach(r=>r.onchange=()=>setTheme(null,r.value));
+  v.querySelectorAll('.chip b').forEach(b=>b.onclick=()=>{S.lists[b.dataset.l].splice(+b.dataset.i,1);saveLists();render()});
+  v.querySelectorAll('[data-add]').forEach(i=>i.onkeydown=e=>{if(e.key==='Enter'&&i.value.trim()){ensureList(i.dataset.add,i.value);render()}});
+  $('#cu').onchange=e=>{S.currency=e.target.value||'₱';saveLists();render()};
+  $('#bk').onclick=()=>dl(`expenses-backup-${new Date().toISOString().slice(0,10)}.json`,JSON.stringify({outflow:S.outflow,inflow:S.inflow,lists:S.lists,currency:S.currency},null,1),'application/json');
+  $('#rs').onclick=()=>$('#file').click();
+  $('#file').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const j=JSON.parse(t);if(!(j.months||j.outflow||j.inflow))throw 0;importData(normalize(j))}catch(x){alert('That file is not a valid backup.')}})};
+  $('#csv').onclick=()=>{const q=s=>'"'+String(s??'').replace(/"/g,'""')+'"';
+    const o=['OUTFLOW','Date,Amount,Type,Deduction,Category,Comments',...mo(cur).map(r=>[r.date,r.amount,r.type,r.deduction,r.category,r.comment].map(q).join(',')),'','INFLOW','Date,Amount,Allocation',...mi(cur).map(r=>[r.date,r.amount,r.alloc].map(q).join(','))];
+    dl(`${cur}.csv`,'﻿'+o.join('\n'),'text/csv')};
+  $('#pr').onclick=()=>window.print();
+  $('#wipe').onclick=wipe;
+}
+async function authGo(create){
+  const em=$('#em').value.trim(),pw=$('#pw').value;
+  if(!em||!pw){alert('Enter your email and password.');return}
+  try{create?await FB.createUserWithEmailAndPassword(auth,em,pw):await FB.signInWithEmailAndPassword(auth,em,pw)}catch(e){alert(friendly(e))}
+}
+function mergeLists(from){for(const [l] of LISTNAMES)for(const x of from[l]||[])if(!(S.lists[l]||[]).some(y=>y.toLowerCase()===x.toLowerCase()))S.lists[l].push(x)}
+function importData(n){
+  if(!confirm(`Add ${n.outflow.length} outflow and ${n.inflow.length} inflow rows ${inCloud()?'to your cloud data':'to this device'}? Rows that are already here are overwritten, not duplicated.`))return;
+  n.outflow.forEach(r=>upsert(S.outflow,r));n.inflow.forEach(r=>upsert(S.inflow,r));mergeLists(n.lists);
+  if(inCloud())putMany(n.outflow,n.inflow,true);else saveLocal();
+  const ms=[...n.outflow,...n.inflow].map(monthOf).filter(Boolean).sort();if(ms.length){cur=ms[ms.length-1];P.cur=cur;savePrefs()}
+  toast('Imported');render();
+}
+function uploadLocal(){
+  if(!confirm(`Upload ${L.outflow.length} outflow and ${L.inflow.length} inflow rows from this device to your cloud database?`))return;
+  L.outflow.forEach(r=>upsert(C.outflow,r));L.inflow.forEach(r=>upsert(C.inflow,r));mergeLists(L.lists);
+  putMany(L.outflow,L.inflow,true);toast('Uploading…');render();
+}
+function wipe(){
+  const msg=inCloud()?'Erase ALL expenses from your cloud database? This reaches all your devices and cannot be undone.':'Erase all expenses on this device? This cannot be undone.';
+  if(!confirm(msg)||!confirm('Really erase everything?'))return;
+  if(inCloud()){const o=S.outflow.map(x=>x.id),i=S.inflow.map(x=>x.id);S.outflow=[];S.inflow=[];batchRun([...o.map(id=>b=>b.delete(docRef('outflow',id))),...i.map(id=>b=>b.delete(docRef('inflow',id)))])}
+  else{L.outflow=[];L.inflow=[];saveLocal()}
+  render();
+}
+
+/* ---------- dialogs ---------- */
+const dlg=$('#dlg');
+const field=(id,lab,val,extra='')=>`<div><label for="${id}">${lab}</label><input id="${id}" value="${esc(val)}" ${extra}></div>`;
+const canon=(l,v)=>{v=(v||'').trim();return allOf(l).find(x=>x.toLowerCase()===v.toLowerCase())||v};
+function defDate(){const t=new Date().toISOString().slice(0,10);return t.startsWith(cur)?t:cur+'-01'}
+function afterSave(n){if(monthOf(n)!==cur){cur=monthOf(n);P.cur=cur;savePrefs();toast('Saved in '+mlabel(cur))}else toast('Saved');render()}
+function editOut(id){
+  const r=id?S.outflow.find(x=>x.id===id):{date:defDate(),amount:'',type:'',deduction:'',category:'',comment:''};if(!r)return;
+  dlg.innerHTML=`<form method="dialog" id="f"><h3>${id?'Edit outflow':'Add outflow'}</h3>
+   <div class="row2">${field('fd','Date',r.date,'type="date"')}${field('fa','Amount',r.amount,'type="number" step="0.01" inputmode="decimal" required')}</div>
+   <div class="row2">${field('ft','Type',r.type,'list="dl-types" placeholder="CASH, GCASH…"')}${field('fb','Deduction from',r.deduction,'list="dl-buckets" required')}</div>
+   ${field('fc','Category',r.category,'list="dl-categories"')}${field('fm','Comments',r.comment)}
+   <div class="acts">${id?'<button type="button" class="danger sp" id="del">Delete</button>':''}<button type="button" id="cx">Cancel</button><button class="pri" value="ok">Save</button></div></form>`;
+  dlg.showModal();if(!id)$('#fa').focus();$('#cx').onclick=()=>dlg.close();
+  if(id)$('#del').onclick=()=>{if(confirm('Delete this outflow?')){delRow('outflow',id);dlg.close();render();toast('Deleted')}};
+  $('#f').onsubmit=e=>{const amt=parseFloat($('#fa').value);if(isNaN(amt)){e.preventDefault();return}
+    const n={id:id||uid(),created:id?(r.created||Date.now()):Date.now(),date:$('#fd').value,amount:amt,type:canon('types',$('#ft').value).toUpperCase(),deduction:canon('buckets',$('#fb').value),category:canon('categories',$('#fc').value),comment:$('#fm').value.trim()};
+    n.month=n.date?n.date.slice(0,7):(id?monthOf(r)||cur:cur);
+    ensureList('types',n.type);ensureList('buckets',n.deduction);ensureList('categories',n.category);
+    putRow('outflow',n);afterSave(n)};
+}
+function editIn(id){
+  const r=id?S.inflow.find(x=>x.id===id):{date:defDate(),amount:'',alloc:''};if(!r)return;
+  dlg.innerHTML=`<form method="dialog" id="f"><h3>${id?'Edit inflow':'Add inflow'}</h3>
+   <div class="row2">${field('fd','Date',r.date,'type="date"')}${field('fa','Amount',r.amount,'type="number" step="0.01" inputmode="decimal" required')}</div>
+   ${field('fb','Allocation',r.alloc,'list="dl-buckets" required placeholder="e.g. Food & Essentials"')}
+   <div class="acts">${id?'<button type="button" class="danger sp" id="del">Delete</button>':''}<button type="button" id="cx">Cancel</button><button class="pri" value="ok">Save</button></div></form>`;
+  dlg.showModal();if(!id)$('#fa').focus();$('#cx').onclick=()=>dlg.close();
+  if(id)$('#del').onclick=()=>{if(confirm('Delete this inflow?')){delRow('inflow',id);dlg.close();render();toast('Deleted')}};
+  $('#f').onsubmit=e=>{const amt=parseFloat($('#fa').value);if(isNaN(amt)){e.preventDefault();return}
+    const n={id:id||uid(),created:id?(r.created||Date.now()):Date.now(),date:$('#fd').value,amount:amt,alloc:canon('buckets',$('#fb').value)};
+    n.month=n.date?n.date.slice(0,7):(id?monthOf(r)||cur:cur);ensureList('buckets',n.alloc);
+    putRow('inflow',n);afterSave(n)};
+}
+
+/* ---------- start ---------- */
+setTheme(P.mode||'auto',P.accent||'gold');
+render();
+if('serviceWorker' in navigator&&location.protocol.startsWith('http')){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+initCloud();
+</script>
+</body>
+</html>
