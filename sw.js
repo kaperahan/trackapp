@@ -1,8 +1,8 @@
 // Service worker: makes the app load with no internet.
 // - App files: network first (so updates arrive when online), cache as fallback.
 // - Firebase SDK from gstatic: cache first (never changes for a pinned version).
-const CACHE = 'my-accounts-v1';
-const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'firebase-config.js'];
+const CACHE = 'my-accounts-v2';
+const SHELL = ['./', 'index.html', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png', 'firebase-config.js'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));

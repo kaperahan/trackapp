@@ -6,18 +6,18 @@
 <title>My Accounts</title>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-maskable-512.png">
 <meta name="theme-color" content="#0f7a5a">
 <meta name="mobile-web-app-capable" content="yes">
 <style>
-:root{--bg:#f4f6f3;--card:#fff;--ink:#16221b;--mute:#6b7a70;--line:#e2e8e3;--acc:#0f7a5a;--accsoft:#dff3ea;--red:#c62828;--green:#1b8a4b;--shadow:0 1px 2px rgba(20,40,30,.08)}
-@media(prefers-color-scheme:dark){:root{--bg:#0f1512;--card:#18211c;--ink:#e8f1ec;--mute:#92a399;--line:#27342d;--acc:#3ccf9b;--accsoft:#173a2d;--red:#ff7b72;--green:#6fd99a;--shadow:none}}
+:root{--bg:#f4f6f3;--card:#fff;--ink:#16221b;--mute:#6b7a70;--line:#e2e8e3;--acc:#0f7a5a;--accsoft:#dff3ea;--red:#c62828;--green:#1b8a4b;--onacc:#fff;--shadow:0 1px 2px rgba(20,40,30,.08)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
 header{background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5;padding-top:env(safe-area-inset-top)}
 .top{max-width:960px;margin:0 auto;padding:10px 16px 0;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:10px}
 h1{margin:0;font-size:18px}
+#themebtn{width:30px;height:30px;padding:0;border-radius:999px;font-size:15px;line-height:1}
 #sync{font-size:12px;font-weight:600;border:1px solid var(--line);border-radius:999px;padding:2px 9px;color:var(--mute);cursor:pointer;background:transparent;display:inline-flex;align-items:center;gap:6px}
 #sync i{width:8px;height:8px;border-radius:50%;background:var(--mute)}
 #sync.ok i{background:var(--green)}#sync.busy i{background:#d99a06}#sync.off i{background:var(--red)}
@@ -32,13 +32,11 @@ nav .dot{width:9px;height:9px;border-radius:50%}
 main{max-width:960px;margin:0 auto;padding:16px 16px 96px}
 button,input,select{font:inherit;color:inherit}
 button{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 14px;cursor:pointer}
-button.pri{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
-@media(prefers-color-scheme:dark){button.pri{color:#06241a}}
+button.pri{background:var(--acc);border-color:var(--acc);color:var(--onacc);font-weight:600}
 button.danger{color:var(--red)}
 input,select{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 11px;width:100%}
 label{display:block;font-size:12px;color:var(--mute);margin-bottom:3px;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
-.hero{background:var(--acc);color:#fff;border-radius:16px;padding:18px 20px;margin-bottom:14px}
-@media(prefers-color-scheme:dark){.hero{color:#06241a}}
+.hero{background:var(--acc);color:var(--onacc);border-radius:16px;padding:18px 20px;margin-bottom:14px}
 .hero .k{font-size:12px;text-transform:uppercase;letter-spacing:.6px;opacity:.85;font-weight:600}
 .hero .v{font-size:32px;font-weight:800;font-variant-numeric:tabular-nums}
 .hero .sub{display:flex;gap:22px;margin-top:8px;flex-wrap:wrap;font-size:13px}
@@ -84,13 +82,21 @@ dialog h3{margin:0}
 .seg{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .seg label{margin:0;padding:9px;text-align:center;cursor:pointer;font-size:13px;text-transform:none;letter-spacing:0;color:var(--ink);font-weight:600}
 .seg input{display:none}
-.seg label:has(input:checked){background:var(--acc);color:#fff}
-@media(prefers-color-scheme:dark){.seg label:has(input:checked){color:#06241a}}
+.seg label:has(input:checked){background:var(--acc);color:var(--onacc)}
 .acts{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}.acts .sp{margin-right:auto}
 .colors{display:flex;gap:8px;flex-wrap:wrap}
 .colors label{margin:0;width:28px;height:28px;border-radius:50%;cursor:pointer;border:3px solid transparent}
 .colors input{display:none}
 .colors label:has(input:checked){border-color:var(--ink)}
+.swatches{display:flex;gap:12px;flex-wrap:wrap}
+.swatches label{margin:0;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;font-size:11px;text-transform:none;letter-spacing:0;color:var(--mute)}
+.swatches i{width:34px;height:34px;border-radius:50%;border:3px solid transparent;box-shadow:inset 0 0 0 2px var(--card)}
+.swatches input{display:none}
+.swatches input:checked+i{border-color:var(--ink)}
+.seg2{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);border-radius:10px;overflow:hidden;max-width:320px}
+.seg2 label{margin:0;padding:9px;text-align:center;cursor:pointer;font-size:13px;text-transform:none;letter-spacing:0;color:var(--ink);font-weight:600}
+.seg2 input{display:none}
+.seg2 label:has(input:checked){background:var(--acc);color:var(--onacc)}
 .hint{color:var(--mute);font-size:13px;padding:0 16px 14px}
 .pad{padding:16px;display:grid;gap:10px;max-width:420px}
 .toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#222;color:#fff;padding:8px 14px;border-radius:8px;opacity:0;transition:.25s;pointer-events:none;z-index:20;font-size:14px;max-width:90vw;text-align:center}
@@ -98,11 +104,35 @@ dialog h3{margin:0}
 @media(max-width:520px){.bar{grid-template-columns:90px 1fr 84px}}
 @media print{header,.fab,button{display:none!important}}
 </style>
+<script>
+/* theme: applied before first paint. mode = auto|light|dark, accent = key of PAL */
+window.PAL={
+ green :{n:'Emerald',sw:'#0f7a5a',l:{acc:'#0f7a5a',soft:'#dff3ea',bg:'#f4f6f3',line:'#e2e8e3'},d:{acc:'#3ccf9b',soft:'#173a2d',bg:'#0f1512',card:'#18211c',line:'#27342d'}},
+ blue  :{n:'Ocean',sw:'#2563eb',l:{acc:'#2563eb',soft:'#dbe7ff',bg:'#f3f5fa',line:'#e0e6f0'},d:{acc:'#6ea0ff',soft:'#1a2a4d',bg:'#0e131c',card:'#172030',line:'#26324a'}},
+ violet:{n:'Violet',sw:'#7c3aed',l:{acc:'#7c3aed',soft:'#ece3ff',bg:'#f6f4fa',line:'#e8e3f0'},d:{acc:'#a98bff',soft:'#2a2150',bg:'#14111c',card:'#1f1a2c',line:'#342d48'}},
+ rose  :{n:'Rose',sw:'#e11d48',l:{acc:'#e11d48',soft:'#ffe1e8',bg:'#faf4f5',line:'#f0e3e6'},d:{acc:'#ff7a98',soft:'#4a1a27',bg:'#1a1114',card:'#261a1e',line:'#3d2830'}},
+ amber :{n:'Amber',sw:'#b45309',l:{acc:'#b45309',soft:'#ffedd0',bg:'#faf6f0',line:'#efe5d6'},d:{acc:'#f0b44a',soft:'#44310f',bg:'#17130c',card:'#211c10',line:'#383122'}},
+ slate :{n:'Slate',sw:'#334155',l:{acc:'#334155',soft:'#e2e8f0',bg:'#f3f4f6',line:'#e2e5ea'},d:{acc:'#94a3b8',soft:'#26303d',bg:'#12151a',card:'#1b2028',line:'#2c3440'}}
+};
+window.applyTheme=function(mode,accent){
+  var dark=mode==='dark'||(mode!=='light'&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches);
+  var p=PAL[accent]||PAL.green,t=dark?p.d:p.l,r=document.documentElement.style;
+  var v={'--acc':t.acc,'--accsoft':t.soft,'--bg':t.bg,'--line':t.line,'--card':dark?t.card:'#ffffff',
+    '--ink':dark?'#eef1ef':'#16221b','--mute':dark?'#9aa8a0':'#6b7a70','--red':dark?'#ff7b72':'#c62828','--green':dark?'#6fd99a':'#1b8a4b',
+    '--onacc':dark?'#0b1410':'#ffffff','--shadow':dark?'none':'0 1px 2px rgba(20,40,30,.08)'};
+  for(var k in v)r.setProperty(k,v[k]);
+  document.documentElement.style.colorScheme=dark?'dark':'light';
+  var m=document.querySelector('meta[name=theme-color]');if(m)m.setAttribute('content',t.acc);
+};
+(function(){var p={};try{p=JSON.parse(localStorage.getItem('bank-tracker-prefs'))||{}}catch(e){}
+ window.__theme={mode:p.mode||'auto',accent:p.accent||'green'};applyTheme(__theme.mode,__theme.accent);
+ if(window.matchMedia)matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(){if(__theme.mode==='auto')applyTheme('auto',__theme.accent)});})();
+</script>
 <script src="firebase-config.js"></script>
 </head>
 <body>
 <header>
-  <div class="top"><div class="brand"><h1>My Accounts</h1><button id="sync" title="Sync status"><i></i><span>Local only</span></button></div>
+  <div class="top"><div class="brand"><h1>My Accounts</h1><button id="sync" title="Sync status"><i></i><span>Local only</span></button><button id="themebtn" title="Theme: auto"></button></div>
     <div class="mnav"><button id="prev" title="Previous month">‹</button><input type="month" id="mon"><button id="next" title="Next month">›</button></div></div>
   <nav id="tabs"></nav>
 </header>
@@ -243,6 +273,23 @@ function renderSync(){
 }
 window.addEventListener('online',renderSync);window.addEventListener('offline',renderSync);
 $('#sync').onclick=()=>{tab='settings';render()};
+
+
+/* ---------- theme ---------- */
+const MODE_ICON={auto:'◐',light:'☀',dark:'☾'};
+function setTheme(mode,accent){
+  P.mode=mode||P.mode||'auto';P.accent=accent||P.accent||'green';
+  window.__theme={mode:P.mode,accent:P.accent};applyTheme(P.mode,P.accent);savePrefs();
+  const b=$('#themebtn');b.textContent=MODE_ICON[P.mode];b.title='Theme: '+P.mode+' (tap to change)';
+}
+$('#themebtn').onclick=()=>{const order=['auto','light','dark'];setTheme(order[(order.indexOf(P.mode||'auto')+1)%3]);if(tab==='settings')render();toast('Theme: '+P.mode)};
+function themePanel(){
+  const m=P.mode||'auto',a=P.accent||'green';
+  return`<div class="panel"><h2>Appearance</h2><div class="pad" style="max-width:none">
+    <div><label>Mode</label><div class="seg2">${['auto','light','dark'].map(k=>`<label><input type="radio" name="tm" value="${k}" ${m===k?'checked':''}>${k[0].toUpperCase()+k.slice(1)}</label>`).join('')}</div></div>
+    <div><label>Color</label><div class="swatches">${Object.entries(PAL).map(([k,p])=>`<label title="${p.n}"><input type="radio" name="ta" value="${k}" ${a===k?'checked':''}><i style="background:${p.sw}"></i>${p.n}</label>`).join('')}</div></div>
+    <div class="hint" style="padding:0">Auto follows your phone or computer's light/dark setting. This is saved on each device separately.</div></div></div>`;
+}
 
 /* ---------- calculations ---------- */
 const acct=id=>S.accounts.find(a=>a.id===id);
@@ -394,7 +441,7 @@ function cloudPanel(){
     <div class="btns">${hasLocal?`<button class="pri" id="up">Upload this device's data (${L.accounts.length} accounts, ${L.tx.length} transactions)</button>`:''}<button id="so">Sign out</button></div></div></div>`;
 }
 function vSettings(v){
-  v.innerHTML=cloudPanel()+`<div class="panel"><h2>General</h2><div class="pad"><div><label for="cu">Currency symbol</label><input id="cu" value="${esc(S.currency)}" maxlength="4"></div></div></div>
+  v.innerHTML=cloudPanel()+themePanel()+`<div class="panel"><h2>General</h2><div class="pad"><div><label for="cu">Currency symbol</label><input id="cu" value="${esc(S.currency)}" maxlength="4"></div></div></div>
   <div class="panel"><h2>Backup &amp; data</h2><div style="padding:16px;display:flex;gap:8px;flex-wrap:wrap">
     <button class="pri" id="bk">Download backup (JSON)</button><button id="rs">Restore from backup</button><button id="csv">Export all transactions (CSV)</button>
     <button class="danger" id="wipe">Erase everything</button><input type="file" id="file" accept=".json" hidden></div>
@@ -407,6 +454,8 @@ function vSettings(v){
   }
   if($('#so'))$('#so').onclick=()=>{if(confirm('Sign out? Cloud data stays safe online; this device goes back to its own local data.'))FB.signOut(auth)};
   if($('#up'))$('#up').onclick=uploadLocal;
+  v.querySelectorAll('input[name=tm]').forEach(r=>r.onchange=()=>setTheme(r.value,null));
+  v.querySelectorAll('input[name=ta]').forEach(r=>r.onchange=()=>setTheme(null,r.value));
   $('#cu').onchange=e=>{setCurrency(e.target.value||'₱');render()};
   $('#bk').onclick=()=>dl(`accounts-backup-${new Date().toISOString().slice(0,10)}.json`,JSON.stringify({accounts:S.accounts,tx:S.tx,currency:S.currency},null,1),'application/json');
   $('#rs').onclick=()=>$('#file').click();
@@ -512,6 +561,7 @@ function editTx(id,defAcct,defKind){
 }
 
 /* ---------- start ---------- */
+setTheme(P.mode||'auto',P.accent||'green');
 render();
 if('serviceWorker' in navigator&&location.protocol.startsWith('http')){navigator.serviceWorker.register('sw.js').catch(()=>{})}
 initCloud();
